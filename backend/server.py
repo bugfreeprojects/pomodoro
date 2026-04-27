@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import secrets
 import sqlite3
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -14,12 +15,13 @@ from urllib.parse import urlparse
 BASE_DIR = Path(__file__).resolve().parent.parent
 DB_PATH = Path(__file__).resolve().parent / "rewards.db"
 INDEX_PATH = BASE_DIR / "pomodoro-timer.html"
-HOST = "127.0.0.1"
-PORT = 8000
+# Listen on all interfaces in production, localhost in development
+HOST = "0.0.0.0"  # Changed from 127.0.0.1 for cloud deployment
+PORT = int(os.environ.get("PORT", 8000))  # Use PORT env var if set
 
 
 def utc_now() -> str:
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    return datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
 
 
 def get_conn() -> sqlite3.Connection:

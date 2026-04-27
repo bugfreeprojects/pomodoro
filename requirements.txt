@@ -1,0 +1,2 @@
+# FocusTomato uses only Python built-in libraries
+# No external dependencies needed!
